@@ -1,14 +1,27 @@
-import people from "./dataset"; //get all of the available data from our database.
+//get all of the available data from our database.
+import UserModel from "./models/user";
+
 const Resolvers = {
   Query: {
-    getAllPeople: () => people, //if the user runs the getAllPeople command
+    getAllUsers: async () => await UserModel.find(), //if the user runs the getAllPeople command
     //if the user runs the getPerson command:
-    getPerson: (_: any, args: any) => { 
+    getUser: (_: any, args: any) => { 
       console.log(args);
       //get the object that contains the specified ID.
-      return people.find((person) => person.id === args.id);
+      return UserModel.findById(args.id);
     },
   },
+  Mutation: {
+    createUser: async (_: any, { input }: any) => {
+        try {
+          const user = await UserModel.create(input);
+          return user;
+        } catch (error) {
+          console.error(error);
+          throw new Error("Failed to create user");
+        }
+      },
+  }
 };
 export default Resolvers;
 
