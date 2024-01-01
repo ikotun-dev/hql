@@ -16,8 +16,17 @@ import Resolvers from "./Resolvers";
 import express from "express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import http from "http";
+import conn from "./database";
 
 async function startApolloServer(schema: any, resolvers: any) {
+    conn.on("connection", () => {
+        console.log("Connection established with mongoDB");
+      });
+      
+      conn.on("error", () => {
+        console.log("An error occurred");
+      });
+      
   const app = express();
   const httpServer = http.createServer(app);
   const server = new ApolloServer({
